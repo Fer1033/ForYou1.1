@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Game ❤️</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #ffd6e6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .game-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            max-width: 800px;
+            width: 90%;
+            text-align: center;
+        }
+        .room {
+            display: none;
+        }
+        .room.active {
+            display: block;
+        }
+        .door {
+            display: inline-block;
+            margin: 10px;
+            padding: 15px 30px;
+            background-color: #ff69b4;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: transform 0.2s;
+        }
+        .door:hover {
+            transform: scale(1.1);
+        }
+        .question {
+            font-size: 24px;
+            margin-bottom: 30px;
+            color: #ff1493;
+        }
+        #minigame {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .rabbit {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            cursor: pointer;
+            background-image: url('rabbit.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        #love-minigame {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #ffd6e6, #ffb6c1);
+        }
+        #player {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: #ff1493;
+            border-radius: 50%;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(255, 20, 147, 0.5);
+        }
+        .heart {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-image: url('heart.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            cursor: pointer;
+        }
+        .broken-heart {
+            position: absolute;
+            width: 70px;
+            height: 70px;
+            background-image: url('broken-heart.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            cursor: pointer;
+        }
+        .failure-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            z-index: 100;
+        }
+        .restart-button {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: #ff69b4;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: transform 0.2s;
+        }
+        .restart-button:hover {
+            transform: scale(1.1);
+        }
+        .intro {
+            font-size: 20px;
+            line-height: 1.6;
+            color: #ff1493;
+            margin-bottom: 30px;
+        }
+        .result {
+            font-size: 48px;
+            color: #ff1493;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div id="intro" class="room active">
+            <h1>Welcome to Our Love Game! ❤️</h1>
+            <p class="intro">
+                Hey cutie megie! I made this special game just for you. 
+                It's to settle once and for all who loves who more! 
+                You have to accept this because its all based on your answers.
+                Are you ready to play? Click the button below to start!
+            </p>
+            <button class="door" onclick="startGame()">Start Game</button>
+        </div>
+
+        <div id="room1" class="room">
+            <p class="question">Would you give me the better ice cream flavor and you take the less delicious one like giving me chocolate and you take lime?</p>
+            <button class="door" onclick="nextRoom(1)">Yes</button>
+            <button class="door" onclick="nextRoom(1)">No</button>
+        </div>
+
+        <div id="room2" class="room">
+            <p class="question">Would you give me all your plats (minus the legendary gem you'll buy)?</p>
+            <button class="door" onclick="nextRoom(2)">Yes</button>
+            <button class="door" onclick="nextRoom(2)">No</button>
+        </div>
+
+        <div id="room3" class="room">
+            <p class="question">Are you gay?</p>
+            <div id="gay-doors"></div>
+        </div>
+
+        <div id="room4" class="room">
+            <p class="question">Catch them! Click on them before the time limit!</p>
+            <div id="minigame">
+            </div>
+            <p id="rabbit-count">Rabbits caught: 0/10</p>
+        </div>
+
+        <div id="room5" class="room">
+            <p class="question">Catch the hearts!</p>
+            <div id="love-minigame">
+                <div id="player"></div>
+            </div>
+            <p id="score">Score: 0</p>
+            <p id="timer">Time: 30s</p>
+        </div>
+
+        <div id="room6" class="room">
+            <h2>Final Result</h2>
+            <p class="result">I LOVE YOU MORE! ❤️</p>
+            <p>No matter what choices you make, I will always love you the most!</p>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html> 
