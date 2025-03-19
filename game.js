@@ -86,7 +86,7 @@ function startLoveMinigame() {
     let gameActive = true;
     const scoreElement = document.getElementById('score');
     const timerElement = document.getElementById('timer');
-    const goalScore = 150;
+    const goalScore = 200;
     let timer;
     let heartSpawner;
 
